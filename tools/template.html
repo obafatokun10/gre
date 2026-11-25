@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="Obaloluwa Fatokun">
+<title>GRE Quant Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/*
+VOICE: calm, exam-room focus; a tool that gets out of the way of the questions.
+IDEA: the computer-delivered GRE screen: a cobalt testing toolbar over a white answer sheet.
+PICTURE: the question itself on a paper sheet, with a strip of answer bubbles per set on the home view.
+COLOUR and TYPE: cobalt #1f3fd6 bands, white paper, ink #14171c, coral #ff6b4a only for marks and time; Public Sans.
+LAYOUT: home = cobalt title band with overall score, then set sheets; session = sticky toolbar, navigator, paper, answer panel.
+*/
+:root{color-scheme:light dark;
+--bg:light-dark(#ffffff,#101318);--ink:light-dark(#14171c,#e8eaee);--mute:light-dark(#5b6270,#9aa2b1);
+--line:light-dark(#dde1e8,#2a303a);--soft:light-dark(#f3f5f9,#181c23);--band:#1f3fd6;--band2:#1733b8;
+--acc:#ff6b4a;--ok:light-dark(#11804a,#3fc07f);--bad:light-dark(#c8322b,#ff6a62);
+--okbg:light-dark(#e6f5ec,#13301f);--badbg:light-dark(#fbe9e8,#3a1715);--sel:light-dark(#e7ecff,#1d2752)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Public Sans",system-ui,sans-serif;overflow-x:clip}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 max(4vw,16px)}
+.hero{background:var(--band);color:#fff;padding:clamp(28px,5vw,56px) 0 clamp(24px,4vw,44px)}
+.hero h1{font-size:clamp(32px,5vw,48px);line-height:1.05;margin:0 0 10px;font-weight:800;text-wrap:balance}
+.hero p{margin:0;max-width:60ch;opacity:.9}
+.score{display:flex;flex-wrap:wrap;gap:12px 36px;margin-top:26px}
+.score b{display:block;font-size:clamp(28px,4vw,40px);line-height:1;font-variant-numeric:tabular-nums}
+.score span{font-size:14px;opacity:.85}
+h2{font-size:22px;margin:34px 0 14px;line-height:1.2}
+.sets{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:16px}
+.card{border:1px solid var(--line);border-radius:10px;padding:18px;background:var(--bg);display:flex;flex-direction:column;gap:12px}
+.card h3{margin:0;font-size:18px;line-height:1.25}
+.card .meta{font-size:14px;color:var(--mute);margin-top:2px}
+.bub{display:flex;flex-wrap:wrap;gap:4px}
+.bub i{width:14px;height:14px;border-radius:50%;border:1.5px solid var(--line);background:var(--soft)}
+.bub i.ok{background:var(--ok);border-color:var(--ok)}.bub i.bad{background:var(--bad);border-color:var(--bad)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{min-height:44px;padding:0 16px;border-radius:8px;border:1.5px solid var(--line);background:var(--bg);font-weight:600;font-size:15px;white-space:nowrap}
+.btn:hover{border-color:var(--band)}
+.btn.pri{background:var(--band);border-color:var(--band);color:#fff}
+.btn.pri:hover{background:var(--band2)}
+.btn:disabled{opacity:.45;cursor:default}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{min-height:44px;padding:0 14px;border-radius:22px;border:1.5px solid var(--line);background:var(--bg);font-weight:600;font-size:15px}
+.chip:hover{border-color:var(--band)}
+.chip small{color:var(--mute);font-weight:500;margin-left:4px}
+.opts{display:flex;flex-wrap:wrap;gap:16px 24px;align-items:center;margin-top:14px;font-size:15px;color:var(--mute)}
+.opts label{display:flex;gap:8px;align-items:center;min-height:44px}
+.opts input{width:20px;height:20px;accent-color:var(--band)}
+.foot{color:var(--mute);font-size:14px;margin:40px 0 32px;display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center}
+.link{background:none;border:0;color:var(--mute);text-decoration:underline;min-height:44px;padding:0}
+/* session */
+.bar{position:sticky;top:0;z-index:20;background:var(--band);color:#fff}
+.bar .wrap{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;padding-top:8px;padding-bottom:8px}
+.acts{display:flex;gap:8px;flex-wrap:wrap}
+.bar .t{flex:1 1 180px;font-weight:700;line-height:1.2}
+.bar .t small{display:block;font-weight:500;opacity:.8;font-size:13px}
+.tb{min-height:44px;padding:0 13px;border-radius:7px;border:1.5px solid rgba(255,255,255,.35);background:transparent;color:#fff;font-weight:600;font-size:15px;white-space:nowrap}
+.tb:hover{background:rgba(255,255,255,.12)}
+.tb.on{background:#fff;color:var(--band);border-color:#fff}
+.tb.flag.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.clock{font-variant-numeric:tabular-nums;font-weight:700;min-width:64px;text-align:center;padding:0 6px}
+.clock.low{color:#ffd2c7}
+.nav{display:flex;gap:6px;overflow-x:auto;padding:12px 0 4px;scrollbar-width:thin}
+.nav button{flex:none;width:40px;height:40px;border-radius:6px;border:1.5px solid var(--line);background:var(--bg);font-weight:600;font-size:14px;position:relative;font-variant-numeric:tabular-nums}
+.nav button.cur{border-color:var(--band);box-shadow:inset 0 0 0 1.5px var(--band)}
+.nav button.ans{background:var(--sel)}
+.nav button.ok{background:var(--okbg);border-color:var(--ok);color:var(--ok)}
+.nav button.bad{background:var(--badbg);border-color:var(--bad);color:var(--bad)}
+.nav button.fl::after{content:"";position:absolute;top:3px;right:3px;width:7px;height:7px;border-radius:50%;background:var(--acc)}
+.stage{display:grid;gap:18px;padding:12px 0 60px}
+.paper{background:#fff;color:#14171c;border:1px solid var(--line);border-radius:10px;padding:clamp(12px,2.5vw,26px);overflow-x:auto}
+.paper img{display:block;max-width:100%;height:auto}
+.big .paper img{max-width:none}
+details.data{border-bottom:1px solid #e3e6ec;margin-bottom:16px;padding-bottom:12px}
+details.data summary{cursor:pointer;font-weight:600;color:#1f3fd6;min-height:36px;font-size:15px}
+.ask{font-size:15px;color:var(--mute);margin:0 0 10px}
+.ans{display:flex;flex-wrap:wrap;gap:10px}
+.ans.qc{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr))}
+.opt{min-height:48px;border:1.5px solid var(--line);background:var(--bg);border-radius:8px;display:flex;gap:10px;align-items:center;padding:8px 14px 8px 10px;text-align:left;font-size:15px;line-height:1.3}
+.opt .l{flex:none;width:30px;height:30px;display:grid;place-items:center;border:1.5px solid currentColor;border-radius:50%;font-weight:700;font-size:14px}
+.ans.ms .opt .l{border-radius:4px}
+.ans.mc .opt,.ans.ms .opt{padding:8px 12px}
+.opt:hover:not(:disabled){border-color:var(--band)}
+.opt.sel{background:var(--sel);border-color:var(--band)}
+.opt.sel .l{background:var(--band);border-color:var(--band);color:#fff}
+.opt.right{border-color:var(--ok);background:var(--okbg)}
+.opt.right .l{background:var(--ok);border-color:var(--ok);color:#fff}
+.opt.wrong{border-color:var(--bad);background:var(--badbg)}
+.opt.wrong .l{background:var(--bad);border-color:var(--bad);color:#fff}
+.opt:disabled{cursor:default}
+.ne{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.ne input{width:180px;height:48px;border:1.5px solid var(--line);border-radius:8px;padding:0 12px;font-size:18px;background:var(--bg);font-variant-numeric:tabular-nums}
+.ne input:focus{border-color:var(--band);outline:none;box-shadow:0 0 0 3px var(--sel)}
+.frac{display:inline-flex;flex-direction:column;align-items:center;gap:6px}
+.frac input{width:120px}
+.frac hr{width:130px;border:0;border-top:2px solid var(--ink);margin:0}
+.panel{border:1px solid var(--line);border-radius:10px;padding:18px;display:grid;gap:14px}
+.fb{border-radius:8px;padding:12px 14px;font-weight:600;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}
+.fb.ok{background:var(--okbg);color:var(--ok)}.fb.bad{background:var(--badbg);color:var(--bad)}
+.fb span{font-weight:500;color:var(--ink)}
+.hint{font-size:14px;color:var(--mute)}
+.ex h3{margin:0 0 8px;font-size:17px}
+/* results */
+.res{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:18px 0 8px}
+.res div{border:1px solid var(--line);border-radius:10px;padding:14px}
+.res b{display:block;font-size:30px;line-height:1.1;font-variant-numeric:tabular-nums}
+.res span{font-size:14px;color:var(--mute)}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left}
+th{font-size:13px;color:var(--mute);font-weight:600}
+td.c{text-align:center}
+.ok-t{color:var(--ok);font-weight:700}.bad-t{color:var(--bad);font-weight:700}
+/* dialog + calculator */
+.modal{position:fixed;inset:0;background:rgba(10,14,22,.5);display:grid;place-items:center;z-index:50;padding:16px}
+.modal>div{background:var(--bg);border-radius:12px;padding:22px;max-width:420px;width:100%;display:grid;gap:14px}
+.modal h3{margin:0;font-size:20px}
+.calc{position:fixed;right:16px;bottom:16px;z-index:40;width:290px;background:var(--bg);border:1px solid var(--line);border-radius:12px;box-shadow:0 14px 40px rgba(0,0,0,.25);padding:12px;display:grid;gap:8px}
+.calc .hd{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:14px}
+.calc .x{width:36px;height:36px;border:0;background:none;font-size:22px;line-height:1}
+.disp{background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:6px 10px;text-align:right;font-variant-numeric:tabular-nums}
+.disp small{display:block;color:var(--mute);font-size:12px;min-height:18px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.disp b{font-size:24px;display:block;overflow:hidden}
+.disp em{float:left;font-style:normal;font-size:12px;color:var(--mute);line-height:30px}
+.keys{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.keys button{height:40px;border:1px solid var(--line);border-radius:6px;background:var(--soft);font-weight:600;font-size:15px}
+.keys button.op{background:var(--sel)}
+.keys button.w2{grid-column:span 2}
+.keys button.tr{grid-column:span 5;background:var(--band);color:#fff;border-color:var(--band)}
+.paper.z img{max-width:none}
+.paper img{cursor:zoom-in}.paper.z img{cursor:zoom-out}
+.pn{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.tip{display:none}
+@media(max-width:600px){.bar{position:static}.bar .wrap{display:grid;grid-template-columns:auto 1fr auto;gap:8px}
+.bar .t{font-size:15px}.acts{grid-column:1/-1;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.tb{padding:0 6px;font-size:14px;min-height:42px}.calc{left:8px;right:8px;width:auto;bottom:8px;padding:10px;gap:6px}
+.keys button{height:36px}.tip{display:block}.nav button{width:38px;height:38px}}
+@media(prefers-reduced-motion:no-preference){.opt,.btn,.chip{transition:background .15s,border-color .15s}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="layer"></div>
+<script>
+{
+const SETS = /*DATA*/;
+const QC_TXT = ['Quantity A is greater.','Quantity B is greater.','The two quantities are equal.','The relationship cannot be determined from the information given.'];
+const TYPE = {qc:'Quantitative comparison',mc:'Multiple choice: one answer',ms:'Multiple choice: one or more answers',ne:'Numeric entry',fr:'Numeric entry'};
+const L = 'ABCDEFGH';
+const SHORT = {qc:'Quantitative comparison',mc:'Multiple choice',ms:'Select one or more',ne:'Numeric entry',di:'Data interpretation'};
+const Q = {};
+SETS.forEach(s => s.qs.forEach(q => { q.set = s.id; q.setTitle = s.title; Q[q.id] = q; }));
+const ALL = SETS.flatMap(s => s.qs);
+const app = document.getElementById('app'), layer = document.getElementById('layer');
+const esc = v => String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const KEY = 'gre-quant-v1';
+let store = {ans:{}, flags:{}, big:false};
+try { const s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s) store = Object.assign(store, s); } catch (e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {} };
+const fmt = s => { s = Math.max(0, Math.round(s)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+function num(v) { v = String(v || '').replace(/[,\s]/g, ''); if (!/^-?(\d+\.?\d*|\.\d+)$/.test(v)) return NaN; return parseFloat(v); }
+function isRight(q, r) {
+  if (r == null || r === '') return false;
+  if (q.t === 'qc' || q.t === 'mc' || q.t === 'ms') return r === q.a;
+  if (q.t === 'ne') { const a = num(r); return !isNaN(a) && Math.abs(a - num(q.a)) < 1e-9; }
+  const [n, d] = String(r).split('/').map(num), [tn, td] = q.a.split('/').map(Number);
+  return !isNaN(n) && !isNaN(d) && d !== 0 && Math.abs(n / d - tn / td) < 1e-9;
+}
+function answered(q, r) { if (r == null || r === '') return false; if (q.t === 'fr') { const [n, d] = r.split('/'); return n !== '' && d !== ''; } return true; }
+function showAns(q, r) {
+  if (r == null || r === '' || (q.t === 'fr' && !answered(q, r))) return '—';
+  if (q.t === 'ms') return r.split('').join(', ');
+  return r;
+}
+function typeKey(q) { return q.g ? 'di' : (q.t === 'fr' ? 'ne' : q.t); }
+
+let ses = null, timerId = null, calcOpen = false;
+
+/* ---------- home ---------- */
+function home() {
+  ses = null; stopTimer(); drawCalc(); if (location.hash) location.hash = '';
+  const done = ALL.filter(q => store.ans[q.id]), right = done.filter(q => store.ans[q.id].ok);
+  const missed = ALL.filter(q => store.ans[q.id] && !store.ans[q.id].ok), flagged = ALL.filter(q => store.flags[q.id]);
+  const drills = [
+    ['qc', 'Quantitative comparison', ALL.filter(q => q.t === 'qc')],
+    ['mc', 'Multiple choice, one answer', ALL.filter(q => q.t === 'mc' && !q.g)],
+    ['ms', 'Select one or more', ALL.filter(q => q.t === 'ms' && !q.g)],
+    ['ne', 'Numeric entry', ALL.filter(q => (q.t === 'ne' || q.t === 'fr') && !q.g)],
+    ['di', 'Data interpretation sets', ALL.filter(q => q.g)],
+    ['un', 'Not yet attempted', ALL.filter(q => !store.ans[q.id])],
+    ['missed', 'Missed questions', missed],
+    ['flag', 'Marked for review', flagged],
+  ];
+  app.innerHTML = `
+  <header class="hero"><div class="wrap">
+    <h1>GRE Quant Practice</h1>
+    <p>All 150 questions from the Official GRE Quantitative Reasoning Practice Questions, Volume 1, with the book's answers and explanations.</p>
+    <div class="score">
+      <div><b>${done.length}<small style="font-size:.5em;opacity:.75"> / ${ALL.length}</small></b><span>questions answered</span></div>
+      <div><b>${done.length ? Math.round(100 * right.length / done.length) + '%' : '—'}</b><span>correct on latest attempt</span></div>
+      <div><b>${missed.length}</b><span>to revisit</span></div>
+    </div>
+  </div></header>
+  <main class="wrap">
+    <h2>Practice by set</h2>
+    <div class="sets">${SETS.map(s => {
+      const d = s.qs.filter(q => store.ans[q.id]).length, ok = s.qs.filter(q => store.ans[q.id] && store.ans[q.id].ok).length;
+      const mins = Math.round(s.qs.length * 1.75);
+      return `<div class="card">
+        <div><h3>${esc(s.title)}</h3><div class="meta">${s.qs.length} questions · ${d ? ok + ' of ' + d + ' correct' : 'not started'}</div></div>
+        <div class="bub" aria-hidden="true">${s.qs.map(q => `<i class="${store.ans[q.id] ? (store.ans[q.id].ok ? 'ok' : 'bad') : ''}"></i>`).join('')}</div>
+        <div class="row"><button class="btn pri" data-go="p:${s.id}">Practice</button><button class="btn" data-go="t:${s.id}">Timed test · ${mins} min</button></div>
+      </div>`; }).join('')}</div>
+    <h2>Drills across all sets</h2>
+    <div class="chips">${drills.map(([k, t, list]) => `<button class="chip" data-drill="${k}" ${list.length ? '' : 'disabled style="opacity:.45"'}>${t}<small>${list.length}</small></button>`).join('')}</div>
+    <div class="opts">
+      <label><input type="checkbox" id="shuf" ${store.shuf ? 'checked' : ''}> Shuffle drill order</label>
+      <label><input type="checkbox" id="big" ${store.big ? 'checked' : ''}> Larger question text</label>
+    </div>
+    <div class="foot"><span>Practice mode marks each answer as you go. Timed tests hold the feedback until you submit, at about 1¾ minutes per question as on the real test.</span>
+    <button class="link" id="reset">Reset progress</button></div>
+  </main>`;
+  app.querySelectorAll('[data-go]').forEach(b => b.onclick = () => {
+    const [m, id] = b.dataset.go.split(':'), s = SETS.find(x => x.id === id);
+    start(m === 't' ? 'test' : 'practice', s.title, s.qs.map(q => q.id));
+  });
+  app.querySelectorAll('[data-drill]').forEach(b => b.onclick = () => {
+    const d = drills.find(x => x[0] === b.dataset.drill);
+    let ids = d[2].map(q => q.id); if (store.shuf && d[0] !== 'di') ids = shuffle(ids);
+    start('practice', d[1], ids);
+  });
+  document.getElementById('shuf').onchange = e => { store.shuf = e.target.checked; save(); };
+  document.getElementById('big').onchange = e => { store.big = e.target.checked; save(); };
+  document.getElementById('reset').onclick = () => dialog('Reset all progress?', 'This clears your saved answers and marks in this browser.', 'Reset', () => { store.ans = {}; store.flags = {}; save(); home(); });
+  window.scrollTo(0, 0);
+}
+
+/* ---------- session ---------- */
+function start(mode, title, ids) {
+  ses = {mode, title, ids, i: 0, resp: {}, checked: {}, t0: Date.now(), qStart: Date.now(), limit: mode === 'test' ? Math.round(ids.length * 1.75) * 60 : 0};
+  location.hash = 'session';
+  startTimer(); render();
+}
+function cur() { return Q[ses.ids[ses.i]]; }
+function locked(q) { return ses.mode === 'review' || (ses.mode === 'practice' && ses.checked[q.id]); }
+function navCls(id, k) {
+  const q = Q[id], r = ses.resp[id]; let c = k === ses.i ? 'cur' : '';
+  if (ses.mode !== 'test' && (ses.checked[id] || ses.mode === 'review')) c += answered(q, r) && isRight(q, r) ? ' ok' : ' bad';
+  else if (answered(q, r)) c += ' ans';
+  if (store.flags[id]) c += ' fl';
+  return c;
+}
+const IMG = {}, LOADED = {}, LOADING = {};
+function load(set) {
+  if (!LOADING[set]) LOADING[set] = fetch('img/' + set + '.json').then(r => { if (!r.ok) throw 0; return r.json(); })
+    .then(d => { Object.assign(IMG, d); LOADED[set] = true; }).catch(() => { delete LOADING[set]; throw 0; });
+  return LOADING[set];
+}
+function render() {
+  const q0 = cur();
+  if (!LOADED[q0.set]) {
+    app.innerHTML = '<main class="wrap"><p style="padding:48px 0;color:var(--mute)">Loading questions…</p></main>';
+    load(q0.set).then(() => { if (ses && cur() === q0) render(); }).catch(() => { app.innerHTML = '<main class="wrap"><p style="padding:48px 0">The questions could not load. <button class="btn" id="rt">Try again</button></p></main>'; document.getElementById('rt').onclick = render; });
+    return;
+  }
+  const q = cur(), n = ses.ids.length, lk = locked(q), r = ses.resp[q.id];
+  const img = (k, w, alt) => `<img src="${IMG[q.id + '-' + k]}" width="${Math.round(w[0] / 2)}" height="${Math.round(w[1] / 2)}" alt="${alt}" loading="lazy">`;
+  const data = q.d ? `<details class="data" open><summary>Data for questions ${q.g[0]}–${q.g[1]}</summary><img src="${IMG[q.d + '-d']}" width="${Math.round(q.ds[0] / 2)}" height="${Math.round(q.ds[1] / 2)}" alt="Data for questions ${q.g[0]} to ${q.g[1]}"></details>` : '';
+  const sub = ses.mode === 'test' ? 'Timed test' : ses.mode === 'review' ? 'Reviewing test' : 'Practice';
+  const showFb = ses.mode === 'review' || (ses.mode === 'practice' && ses.checked[q.id]);
+  const right = isRight(q, r);
+  const last = ses.mode === 'practice' && !ses.checked[q.id] && store.ans[q.id] ? `<span class="hint">Last attempt: ${store.ans[q.id].ok ? 'correct' : 'incorrect'}</span>` : '';
+  app.innerHTML = `
+  <div class="bar"><div class="wrap">
+    <button class="tb" id="home" aria-label="Back to sets">← Sets</button>
+    <div class="t">${esc(ses.title)}<small>${sub} · Question ${ses.i + 1} of ${n}${ses.mode !== 'review' ? '' : ''}</small></div>
+    <span class="clock" id="clock"></span>
+    <div class="acts"><button class="tb flag ${store.flags[q.id] ? 'on' : ''}" id="flag">${store.flags[q.id] ? 'Marked' : 'Mark'}</button>
+    <button class="tb ${calcOpen ? 'on' : ''}" id="calc">Calculator</button>
+    <button class="tb" id="prev" ${ses.i ? '' : 'disabled'}>Back</button>
+    ${ses.i < n - 1 ? '<button class="tb on" id="next">Next</button>' : ses.mode === 'test' ? '<button class="tb on" id="submit">Submit test</button>' : ses.mode === 'review' ? '<button class="tb on" id="results">Results</button>' : '<button class="tb on" id="finish">Finish</button>'}</div>
+  </div></div>
+  <main class="wrap ${store.big ? 'big' : ''}">
+    <div class="nav" id="nav">${ses.ids.map((id, k) => `<button class="${navCls(id, k)}" data-k="${k}" aria-label="Question ${k + 1}">${k + 1}</button>`).join('')}</div>
+    <div class="stage">
+      <p class="tip hint" style="margin:0 0 -8px">Tap the question to zoom in; swipe sideways to read.</p>
+      <div class="paper ${store.big ? 'z' : ''}" style="${store.big ? 'zoom:1.3' : ''}">${data}${img('q', q.qs, 'Question ' + q.k)}</div>
+      <div class="panel">
+        <p class="ask" style="margin:0">${TYPE[q.t]}${q.t === 'ms' ? ' — select all that apply' : ''}${q.t === 'fr' ? ' — enter a fraction' : ''}</p>
+        ${controls(q, r, lk, showFb)}
+        ${ses.mode === 'practice' && !ses.checked[q.id] ? `<div class="row"><button class="btn pri" id="check" ${answered(q, r) ? '' : 'disabled'}>Check answer</button><button class="btn" id="reveal">Show answer</button>${last}</div>` : ''}
+        ${showFb ? `<div class="fb ${right ? 'ok' : 'bad'}">${right ? 'Correct' : answered(q, r) ? 'Not quite' : 'Not answered'}<span>Correct answer: ${esc(q.t === 'ms' ? q.a.split('').join(', ') : q.a)}${q.t === 'qc' ? ' — ' + QC_TXT[L.indexOf(q.a)] : ''}</span>${ses.mode === 'practice' ? '<button class="btn" id="retry" style="margin-left:auto">Try again</button>' : ''}</div>` : ''}
+      </div>
+      ${showFb ? `<div class="ex"><h3>Explanation</h3><div class="paper ${store.big ? 'z' : ''}" style="${store.big ? 'zoom:1.3' : ''}">${img('e', q.es, 'Explanation for question ' + q.k)}</div></div>` : ''}
+      <div class="pn"><button class="btn" id="prev2" ${ses.i ? '' : 'disabled'}>← Previous</button>${ses.i < n - 1 ? '<button class="btn pri" id="next2">Next question →</button>' : ''}</div>
+    </div>
+  </main>`;
+  bind(q);
+  tick();
+  const cb = app.querySelector('#nav .cur'); if (cb) cb.scrollIntoView({block: 'nearest', inline: 'center'});
+}
+function controls(q, r, lk, fb) {
+  const dis = lk ? 'disabled' : '';
+  if (q.t === 'qc' || q.t === 'mc' || q.t === 'ms') {
+    const n = q.n, sel = r || '';
+    return `<div class="ans ${q.t}" role="${q.t === 'ms' ? 'group' : 'radiogroup'}">${L.slice(0, n).split('').map((c, i) => {
+      let cls = sel.includes(c) ? 'sel' : '';
+      if (fb) { if (q.a.includes(c)) cls = 'right'; else if (sel.includes(c)) cls = 'wrong'; }
+      return `<button class="opt ${cls}" data-o="${c}" ${dis} aria-pressed="${sel.includes(c)}"><span class="l">${c}</span>${q.t === 'qc' ? QC_TXT[i] : ''}</button>`; }).join('')}</div>`;
+  }
+  if (q.t === 'ne') return `<div class="ne"><input id="ne" inputmode="decimal" autocomplete="off" aria-label="Your answer" value="${esc(r || '')}" ${dis}>${fb ? `<span class="${isRight(q, r) ? 'ok-t' : 'bad-t'}">${isRight(q, r) ? '✓' : '✗'}</span>` : '<span class="hint">Commas are optional. Enter only the number.</span>'}</div>`;
+  const [a, b] = (r || '/').split('/');
+  return `<div class="ne"><div class="frac"><input id="fn" inputmode="numeric" aria-label="Numerator" value="${esc(a)}" ${dis}><hr><input id="fd" inputmode="numeric" aria-label="Denominator" value="${esc(b)}" ${dis}></div><span class="hint">Equivalent fractions are accepted; you need not reduce.</span></div>`;
+}
+function setResp(q, v) {
+  ses.resp[q.id] = v;
+  const ck = document.getElementById('check'); if (ck) ck.disabled = !answered(q, v);
+  const nb = app.querySelector(`#nav [data-k="${ses.i}"]`); if (nb) nb.className = navCls(q.id, ses.i);
+}
+function bind(q) {
+  const $ = id => document.getElementById(id);
+  $('home').onclick = () => ses.mode === 'test' ? dialog('Leave this timed test?', 'Your answers in this test will not be saved.', 'Leave', home) : home();
+  $('flag').onclick = () => { store.flags[q.id] = !store.flags[q.id]; if (!store.flags[q.id]) delete store.flags[q.id]; save(); render(); };
+  $('calc').onclick = () => { calcOpen = !calcOpen; drawCalc(); render(); };
+  $('prev').onclick = () => go(ses.i - 1);
+  $('prev2').onclick = () => go(ses.i - 1);
+  if ($('next2')) $('next2').onclick = () => go(ses.i + 1);
+  app.querySelectorAll('.paper img').forEach(im => im.onclick = () => im.closest('.paper').classList.toggle('z'));
+  if ($('next')) $('next').onclick = () => go(ses.i + 1);
+  if ($('submit')) $('submit').onclick = () => { const un = ses.ids.filter(id => !answered(Q[id], ses.resp[id])).length; dialog('Submit this test?', un ? `${un} question${un > 1 ? 's are' : ' is'} unanswered.` : 'All questions are answered.', 'Submit', submit); };
+  if ($('results')) $('results').onclick = results;
+  if ($('finish')) $('finish').onclick = summary;
+  app.querySelectorAll('#nav button').forEach(b => b.onclick = () => go(+b.dataset.k));
+  app.querySelectorAll('.opt').forEach(b => b.onclick = () => {
+    const c = b.dataset.o; let v = ses.resp[q.id] || '';
+    if (q.t === 'ms') v = (v.includes(c) ? v.replace(c, '') : v + c).split('').sort().join(''); else v = c;
+    setResp(q, v);
+    app.querySelectorAll('.opt').forEach(o => { const on = v.includes(o.dataset.o); o.classList.toggle('sel', on); o.setAttribute('aria-pressed', on); });
+  });
+  if ($('ne')) $('ne').oninput = e => setResp(q, e.target.value.trim());
+  if ($('fn')) { const f = () => setResp(q, $('fn').value.trim() + '/' + $('fd').value.trim()); $('fn').oninput = f; $('fd').oninput = f; }
+  if ($('check')) $('check').onclick = () => check(q);
+  if ($('reveal')) $('reveal').onclick = () => check(q);
+  if ($('retry')) $('retry').onclick = () => { delete ses.checked[q.id]; delete ses.resp[q.id]; ses.qStart = Date.now(); render(); };
+}
+function check(q) {
+  ses.checked[q.id] = true;
+  const r = ses.resp[q.id];
+  store.ans[q.id] = {r: r || '', ok: isRight(q, r), at: Date.now()}; save();
+  render();
+}
+function go(k) { if (k < 0 || k >= ses.ids.length) return; ses.i = k; ses.qStart = Date.now(); render(); window.scrollTo(0, 0); }
+function submit() {
+  ses.ids.forEach(id => { const q = Q[id], r = ses.resp[id]; store.ans[id] = {r: r || '', ok: isRight(q, r), at: Date.now()}; });
+  save(); ses.used = (Date.now() - ses.t0) / 1000; ses.mode = 'review'; ses.i = 0; stopTimer(); results();
+}
+function summary() { ses.used = (Date.now() - ses.t0) / 1000; ses.mode = 'practice-done'; results(); }
+
+/* ---------- results ---------- */
+function results() {
+  stopTimer();
+  const practice = ses.mode === 'practice-done';
+  const ids = practice ? ses.ids.filter(id => ses.checked[id]) : ses.ids;
+  const ok = ids.filter(id => isRight(Q[id], ses.resp[id])).length;
+  const groups = [['qc', 'Quantitative comparison'], ['mc', 'Multiple choice'], ['ms', 'Select one or more'], ['ne', 'Numeric entry'], ['di', 'Data interpretation']]
+    .map(([k, t]) => { const l = ids.filter(id => typeKey(Q[id]) === k); return l.length ? `<div><b>${l.filter(id => isRight(Q[id], ses.resp[id])).length}/${l.length}</b><span>${t}</span></div>` : ''; }).join('');
+  app.innerHTML = `
+  <header class="hero"><div class="wrap">
+    <h1>${ok} of ${ids.length} correct</h1>
+    <p>${esc(ses.title)} · ${practice ? 'practice' : 'timed test'} · ${fmt(ses.used)} used${ses.limit ? ' of ' + fmt(ses.limit) : ''}${ids.length ? ' · ' + fmt(ses.used / ids.length) + ' per question' : ''}</p>
+  </div></header>
+  <main class="wrap">
+    <div class="res">${groups}</div>
+    <h2>Question by question</h2>
+    <div class="scroll"><table><thead><tr><th>#</th><th>Type</th><th>Your answer</th><th>Correct</th><th></th><th></th></tr></thead><tbody>
+    ${ses.ids.map((id, k) => { const q = Q[id], r = ses.resp[id], g = isRight(q, r), seen = !practice || ses.checked[id];
+      return `<tr><td>${k + 1}${store.flags[id] ? ' <span style="color:var(--acc)">●</span>' : ''}</td><td>${SHORT[typeKey(q)]}</td><td>${seen ? esc(showAns(q, r)) : '—'}</td><td>${esc(q.t === 'ms' ? q.a.split('').join(', ') : q.a)}</td><td class="c">${seen ? `<span class="${g ? 'ok-t' : 'bad-t'}">${g ? '✓' : '✗'}</span>` : ''}</td><td><button class="btn" data-k="${k}" style="min-height:38px">Review</button></td></tr>`; }).join('')}
+    </tbody></table></div>
+    <div class="row" style="margin:28px 0 48px"><button class="btn pri" id="back">Back to sets</button>
+    ${ids.some(id => !isRight(Q[id], ses.resp[id])) ? '<button class="btn" id="redo">Practise the ones I missed</button>' : ''}</div>
+  </main>`;
+  document.getElementById('back').onclick = home;
+  const rd = document.getElementById('redo');
+  if (rd) rd.onclick = () => start('practice', 'Missed from ' + ses.title, ids.filter(id => !isRight(Q[id], ses.resp[id])));
+  app.querySelectorAll('[data-k]').forEach(b => b.onclick = () => { if (practice) { ses.mode = 'practice'; startTimer(); } else ses.mode = 'review'; ses.i = +b.dataset.k; render(); window.scrollTo(0, 0); });
+  window.scrollTo(0, 0);
+}
+
+/* ---------- timer ---------- */
+function startTimer() { stopTimer(); timerId = setInterval(tick, 1000); }
+function stopTimer() { if (timerId) clearInterval(timerId); timerId = null; }
+function tick() {
+  if (!ses) return;
+  const el = document.getElementById('clock'); if (!el) return;
+  if (ses.mode === 'test') {
+    const left = ses.limit - (Date.now() - ses.t0) / 1000;
+    el.textContent = fmt(left); el.className = 'clock' + (left < 300 ? ' low' : ''); el.title = 'Time left';
+    if (left <= 0) { submit(); }
+  } else if (ses.mode === 'practice') {
+    const q = cur(); const t = (Date.now() - ses.qStart) / 1000;
+    el.textContent = ses.checked[q.id] ? '' : fmt(t); el.className = 'clock' + (t > 105 ? ' low' : ''); el.title = 'Time on this question (target about 1:45)';
+  } else el.textContent = '';
+}
+
+/* ---------- dialog ---------- */
+function dialog(title, body, label, ok) {
+  layer.innerHTML = `<div class="modal" role="dialog" aria-modal="true"><div><h3>${esc(title)}</h3><p style="margin:0;color:var(--mute)">${esc(body)}</p><div class="row"><button class="btn pri" id="dok">${esc(label)}</button><button class="btn" id="dno">Cancel</button></div></div></div>`;
+  const close = () => { layer.innerHTML = ''; drawCalc(); };
+  document.getElementById('dok').onclick = () => { close(); ok(); };
+  document.getElementById('dno').onclick = close;
+  document.getElementById('dok').focus();
+}
+
+/* ---------- calculator ---------- */
+const C = {ex: '', val: '0', mem: 0, err: false, done: false};
+function evalExpr(s) {
+  const t = s.match(/\d*\.?\d+(?:e[-+]?\d+)?|[-+×÷()]/g) || []; let p = 0;
+  const peek = () => t[p], next = () => t[p++];
+  function E() { let v = T(); while (peek() === '+' || peek() === '-') { const o = next(), w = T(); v = o === '+' ? v + w : v - w; } return v; }
+  function T() { let v = F(); while (peek() === '×' || peek() === '÷') { const o = next(), w = F(); v = o === '×' ? v * w : v / w; } return v; }
+  function F() { const k = next(); if (k === '-') return -F(); if (k === '(') { const v = E(); if (peek() === ')') next(); return v; } const v = parseFloat(k); if (isNaN(v)) throw 0; return v; }
+  const v = E(); if (p < t.length || !isFinite(v)) throw 0; return v;
+}
+function show(v) { if (!isFinite(v) || Math.abs(v) >= 1e8) return 'Error'; const r = parseFloat(v.toPrecision(10)); let s = String(r); if (s.replace(/[-.]/g, '').length > 8) s = String(parseFloat(r.toFixed(Math.max(0, 7 - String(Math.trunc(Math.abs(r))).length)))); return s; }
+function cpress(k) {
+  if (C.err && k !== 'C') return;
+  const lastNum = () => (C.ex.match(/(\d*\.?\d*)$/) || [''])[0];
+  if (/^[0-9]$/.test(k) || k === '.') {
+    if (C.done) { C.ex = ''; C.done = false; }
+    if (k === '.' && lastNum().includes('.')) return;
+    if (/\)$/.test(C.ex)) C.ex += '×';
+    C.ex += (k === '.' && !lastNum() ? '0.' : k);
+  } else if ('+-×÷'.includes(k)) {
+    C.done = false; if (!C.ex) C.ex = C.val;
+    if (/[-+×÷]$/.test(C.ex)) C.ex = C.ex.slice(0, -1);
+    C.ex += k;
+  } else if (k === '(') { if (C.done) { C.ex = ''; C.done = false; } if (/[\d)]$/.test(C.ex)) C.ex += '×'; C.ex += '('; }
+  else if (k === ')') { const o = (C.ex.match(/\(/g) || []).length, c = (C.ex.match(/\)/g) || []).length; if (o > c && /[\d)]$/.test(C.ex)) C.ex += ')'; }
+  else if (k === '±') { const m = C.ex.match(/(^|[-+×÷(])(\d*\.?\d+)$/); if (m) { const i = C.ex.length - m[2].length; C.ex = C.ex.slice(0, i) + '(-' + m[2] + ')'; } else if (C.done || !C.ex) { C.ex = '(-' + C.val + ')'; C.done = false; } }
+  else if (k === '=' || k === '√') {
+    try { let v = C.ex ? evalExpr(C.ex) : parseFloat(C.val); if (k === '√') { if (v < 0) throw 0; v = Math.sqrt(v); } C.val = show(v); C.err = C.val === 'Error'; C.ex = C.err ? '' : C.val.replace(/^-(.*)$/, '(-$1)'); C.done = true; }
+    catch (e) { C.val = 'Error'; C.err = true; C.ex = ''; }
+  }
+  else if (k === 'C') { C.ex = ''; C.val = '0'; C.err = false; C.done = false; }
+  else if (k === 'CE') { C.ex = C.ex.replace(/(\d*\.?\d*)$/, ''); }
+  else if (k === 'M+') { try { C.mem += C.ex ? evalExpr(C.ex) : parseFloat(C.val); } catch (e) {} }
+  else if (k === 'MR') { if (C.done) { C.ex = ''; C.done = false; } if (/[\d)]$/.test(C.ex)) C.ex += '×'; C.ex += C.mem < 0 ? '(' + show(C.mem) + ')' : show(C.mem); }
+  else if (k === 'MC') C.mem = 0;
+  else if (k === 'T') { cpress('='); const q = ses && cur(); if (!C.err && q && q.t === 'ne' && !locked(q)) { const i = document.getElementById('ne'); if (i) { i.value = C.val; setResp(q, C.val); } } }
+  if (!C.done && !C.err) { try { C.val = C.ex && /[\d)]$/.test(C.ex) ? show(evalExpr(C.ex + ')'.repeat(Math.max(0, (C.ex.match(/\(/g) || []).length - (C.ex.match(/\)/g) || []).length)))) : (lastNum() || C.val); } catch (e) {} }
+  drawCalc();
+}
+function drawCalc() {
+  let el = document.getElementById('calcbox');
+  if (!calcOpen || !ses) { if (el) el.remove(); return; }
+  if (!el) {
+    el = document.createElement('div'); el.className = 'calc'; el.id = 'calcbox'; document.body.appendChild(el);
+    const keys = ['MR', 'MC', 'M+', '(', ')', '7', '8', '9', '÷', 'C', '4', '5', '6', '×', 'CE', '1', '2', '3', '-', '√', '0', '.', '±', '+', '=', 'T'];
+    el.innerHTML = `<div class="hd">Calculator<button class="x" aria-label="Close calculator">×</button></div><div class="disp" aria-live="polite"><small></small><em></em><b>0</b></div><div class="keys">${keys.map(k => `<button data-c="${k}" class="${'+-×÷=√'.includes(k) ? 'op' : ''}${k === 'T' ? ' tr' : ''}">${k === 'T' ? 'Transfer display to answer box' : k === '-' ? '−' : k}</button>`).join('')}</div>`;
+    el.querySelector('.x').onclick = () => { calcOpen = false; drawCalc(); if (ses) render(); };
+    el.querySelectorAll('[data-c]').forEach(b => b.onclick = () => cpress(b.dataset.c));
+  }
+  el.querySelector('small').textContent = C.ex.replace(/-/g, '−') || ' ';
+  el.querySelector('em').textContent = C.mem ? 'M' : '';
+  el.querySelector('b').textContent = C.val.replace(/^-/, '−');
+}
+
+/* ---------- keyboard ---------- */
+document.addEventListener('keydown', e => {
+  if (layer.innerHTML) { if (e.key === 'Escape') { layer.innerHTML = ''; } return; }
+  if (!ses || !document.getElementById('nav')) return;
+  if (e.target.tagName === 'INPUT') { if (e.key === 'Enter') { const c = document.getElementById('check'); if (c && !c.disabled) c.click(); } return; }
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.key === 'ArrowRight') go(ses.i + 1);
+  else if (e.key === 'ArrowLeft') go(ses.i - 1);
+  else if (e.key === 'Enter') { const c = document.getElementById('check'); if (c && !c.disabled) c.click(); }
+  else { const b = app.querySelector(`.opt[data-o="${e.key.toUpperCase()}"]`); if (b && !b.disabled) b.click(); }
+});
+window.addEventListener('hashchange', () => { if (!location.hash && ses && document.getElementById('nav')) home(); });
+home();
+}
+</script>
+</body>
+</html>
